@@ -11,7 +11,7 @@ start:
 
     ; Set up to read second sector (LBA 1)
     mov ah, 0x02          ; BIOS: Read sectors
-    mov al, 0x01          ; Read 1 sector
+    mov al, 0x02          ; Read 1 sector
     mov ch, 0x00          ; Cylinder
     mov dh, 0x00          ; Head
     mov cl, 0x02          ; Sector 2 (starts at 1)
