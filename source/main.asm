@@ -1,51 +1,7 @@
 BITS 16
 org 0x8000
 
-section .data
-strings:
-    db "==[ ViniciusOS BIOS ]==", 0
-    db "--> Versao 1.0", 0
-    db "> Digite 'INICIAR' para iniciar o Kernel", 0
-    db 0
-ram_msg:
-    db "      KBs de memoria disponivel em True Mode (16 BITS)", 0
-    db 0
-text_buffer:
-    times 6 db 0 ; "215"
-    db 0
-inverse_buffer: 
-    times 6 db 0 ; "512"
-    db 0
 
-start_command:
-    db "INICIAR", 0
-    db 0
-
-start_command2:
-    db ":: Kernel carregado com sucesso ::", 0
-    db 0
-
-start_command3:
-    db "Comando irreconhecido pelo sistema.", 0
-    db 0
-
-error:
-    db "errorr kkkk.", 0
-    db 0
-
-buffer1:
-    times 24 db 0
-    db 0
-
-buffer2:
-    dw 0
-boot_drive: db 0
-
-section .bss
-last_tick: resw 1
-
-
-section .text
 start:
 
     mov [boot_drive], dl
@@ -328,13 +284,10 @@ protected_mode_entry:
 
     ;jmp $
 
-    jmp $
-
-    mov bx, 0x1200        ; Load address: 0x0000:0600
-    mov es, bx
-    xor bx, bx
+    ;jmp $
     
-    jmp 0x1200:0000         ; Jump to loaded kernel in protected mode
+    jmp dword 0x08:0x00008400
+         ; Jump to loaded kernel in protected mode
 
 
 ; --------------------------
@@ -393,13 +346,13 @@ gdt_descriptor:
 
 load_kernel:
     mov ah, 0x02          ; BIOS: Read sectors
-    mov al, 0x02          ; Read 1 sector
+    mov al, 0x01          ; Read 1 sector
     mov ch, 0x00          ; Cylinder
     mov dh, 0x00          ; Head
-    mov cl, 4          ; Sector 2 (starts at 1)
+    mov cl, 3          ; Sector 2 (starts at 1)
     mov dl, [boot_drive]  ; Drive
 
-    mov bx, 0x1200        ; Load address: 0x0000:0600
+    mov bx, 0x0840        ; Load address: 0x0000:0600
     mov es, bx
     xor bx, bx
 
@@ -415,6 +368,49 @@ disk_error:
     call print_string
     ret
 
+strings:
+    db "==[ ViniciusOS BIOS ]==", 0
+    db "--> Versao 1.0", 0
+    db "> Digite 'INICIAR' para iniciar o Kernel", 0
+    db 0
+ram_msg:
+    db "      KBs de memoria disponivel em True Mode (16 BITS)", 0
+    db 0
+text_buffer:
+    times 6 db 0 ; "215"
+    db 0
+inverse_buffer: 
+    times 6 db 0 ; "512"
+    db 0
+
+start_command:
+    db "INICIAR", 0
+    db 0
+
+start_command2:
+    db ":: Kernel carregado com sucesso ::", 0
+    db 0
+
+start_command3:
+    db "Comando irreconhecido pelo sistema.", 0
+    db 0
+
+error:
+    db "errorr kkkk.", 0
+    db 0
+
+buffer1:
+    times 24 db 0
+    db 0
+
+buffer2:
+    dw 0
+boot_drive: db 0
+
+
+last_tick: resw 1
+
 ; --------------------------
 ; Boot Signature
 ; --------------------------
+times 1024 - ($ - $$) db 0

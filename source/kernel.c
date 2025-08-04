@@ -1,13 +1,8 @@
 void kernel_main() {
-    const char* msg = "Hello from C kernel!\n";
-    char* vga = (char*)0xB8000;
-
-    for (int i = 0; msg[i]; i++) {
-        vga[i * 2] = msg[i];       // ASCII char
-        vga[i * 2 + 1] = 0x07;     // White on black
-    }
-
-    while (1){
-
-    }
+    volatile char *video = (volatile char*)0xb8000;
+    video[0] = 'H';
+    video[1] = 0x0F;  // white on black
+    video[2] = 'i';
+    video[3] = 0x0F;
+    while (1) {}
 }
