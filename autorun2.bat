@@ -1,5 +1,5 @@
 @echo off
-del /f /q "C:\Users\suliv\Desktop\ViniciusOS\output\*" & for /d %%i in ("C:\Users\suliv\Desktop\ViniciusOS\output\*") do rd /s /q "%%i"
+del /f /q "output\*" & for /d %%i in ("output\*") do rd /s /q "%%i"
 nasm -f bin source/boot.asm -o output/boot.o
 nasm -f bin source/main.asm -o output/main.o
 i686-elf-gcc -m32 -ffreestanding -c source/kernel.c -o output/kernel.o
